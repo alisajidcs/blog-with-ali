@@ -3,32 +3,42 @@ export const PLAYER_HEIGHT = 150
 export const PLAYER_WIDTH = 50
 export const PLAYER_SPEED = 5
 export const PLAYER_JUMP = 20
-export const PLAYER_COLOR = 'red'
 export const GRAVITY = 0.7
+export const ATTACK_HEIGHT = 50
+export const ATTACK_WIDTH = 100
+export const ATTACK_COLOR = 'green'
 
-type position = {
-  x: number,
+type Position = {
+  x: number
   y: number
 }
 
-type keyMap = {
+type KeyMap = {
   up: string
   down: string
   left: string
   right: string
 }
 
+type AttackBox = {
+  position: Position
+  height: number
+  width: number
+}
+
 type SpriteConstructorParameters = {
-  position: position
+  position: Position
   canvasContext: CanvasRenderingContext2D
-  velocity: position
+  velocity: Position
   lastKey: string
-  keys: keyMap
+  keys: KeyMap
+  color: string
 }
 
 interface ISprite extends SpriteConstructorParameters {
   draw(): void
   update(): void
+  attack(): void
 }
 
 export class Sprite implements ISprite {
@@ -39,21 +49,42 @@ export class Sprite implements ISprite {
   keys
   keysStatus = {
     left: {
-      pressed: false
+      pressed: false,
     },
     right: {
-      pressed: false
+      pressed: false,
     },
   }
-  constructor({ position, canvasContext, velocity, lastKey, keys }: SpriteConstructorParameters) {
+
+  color
+  attackBox: AttackBox
+  isAttacking: boolean = false
+
+  constructor({
+    position,
+    canvasContext,
+    velocity,
+    lastKey,
+    keys,
+    color,
+  }: SpriteConstructorParameters) {
     this.position = position
     this.canvasContext = canvasContext
     this.velocity = velocity
     this.lastKey = lastKey
     this.keys = keys
+    this.color = color
+    this.attackBox = {
+      position: this.position,
+      height: ATTACK_HEIGHT,
+      width: ATTACK_WIDTH,
+    }
 
+    this.keyboardControls()
+  }
 
-
+  keyboardControls() {
+    // Keyboard controls
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
         case this.keys.left:
@@ -66,6 +97,9 @@ export class Sprite implements ISprite {
           break
         case this.keys.up:
           this.velocity.y = -PLAYER_JUMP
+          break
+        case 'x':
+          this.attack()
           break
       }
     })
@@ -87,19 +121,36 @@ export class Sprite implements ISprite {
     })
   }
 
+  attack() {
+    this.isAttacking = true
+    setTimeout(() => {
+      this.isAttacking = false
+    }, 500)
+  }
+
   draw() {
-    this.canvasContext.fillStyle = PLAYER_COLOR
+    this.canvasContext.fillStyle = this.color
     this.canvasContext.fillRect(this.position.x, this.position.y, PLAYER_WIDTH, PLAYER_HEIGHT)
+
+    // attack box
+    if (this.isAttacking) {
+      this.canvasContext.fillStyle = ATTACK_COLOR
+      this.canvasContext.fillRect(
+        this.attackBox.position.x,
+        this.attackBox.position.y,
+        ATTACK_WIDTH,
+        ATTACK_HEIGHT,
+      )
+    }
   }
 
   update() {
-    
     // controlling movement based on previous key input
     this.position.y += this.velocity.y
     this.position.x += this.velocity.x
-    
+
     this.draw()
-    
+
     // resetting speed
     this.velocity.x = 0
 
@@ -109,13 +160,12 @@ export class Sprite implements ISprite {
     } else if (this.keysStatus.right.pressed && this.lastKey === this.keys.right) {
       this.velocity.x = PLAYER_SPEED
     }
-    
+
     // controlling gravity
     const playerFeet = this.position.y + PLAYER_HEIGHT
     if (playerFeet + this.velocity.y >= GROUND) {
       this.velocity.y = 0
-    }
-    else {
+    } else {
       this.velocity.y += GRAVITY
     }
   }
