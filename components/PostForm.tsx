@@ -1,8 +1,10 @@
 import { ChangeEventHandler, useState } from 'react'
+
 import { Event } from 'three'
+
 import { post } from './Post'
 
-export type createPost = (post: Pick<post, "title" | "content">) => void
+export type createPost = (post: Pick<post, 'title' | 'content'>) => void
 
 type props = { createPost: createPost }
 

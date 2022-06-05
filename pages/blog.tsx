@@ -1,5 +1,6 @@
-import Head from 'next/head'
 import { useState } from 'react'
+
+import Head from 'next/head'
 
 import Post, { post } from '../components/Post'
 import PostForm, { createPost } from '../components/PostForm'
@@ -11,8 +12,8 @@ export default function Home() {
       ...posts,
       {
         id: posts.length.toString(),
-        ...post
-      }
+        ...post,
+      },
     ])
   }
 
