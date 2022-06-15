@@ -5,9 +5,14 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "baseUrl": "./src",
-    "lib": ["dom", "dom.iterable", "esnext", "esnext.intl"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "esnext.intl"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -20,6 +25,12 @@
     "noEmit": true,
     "incremental": true
   },
-  "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }
