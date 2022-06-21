@@ -7,11 +7,9 @@ import { NavTitle } from './NavTitle'
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode()
   return (
-    <>
-      <NavContainer>
-        <NavTitle />
-        <NavRight colorMode={colorMode} toggleColorMode={toggleColorMode} />
-      </NavContainer>
-    </>
+    <NavContainer>
+      <NavTitle />
+      <NavRight colorMode={colorMode} toggleColorMode={toggleColorMode} />
+    </NavContainer>
   )
 }
